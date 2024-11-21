@@ -19,10 +19,42 @@ model Cat {
   age       Int
   breed     Breed
   createdAt DateTime @default(now())
-  updatedAT DateTime @updatedAt
+  updatedAt DateTime @updatedAt
 }
 
 enum Breed {
   Wild
   Domestic
+}
+
+enum Gender {
+  Male
+  Female
+  Others
+}
+
+enum BloodGroup {
+  A_POSITIVE
+  A_NEGATIVE
+  B_POSITIVE
+  B_NEGATIVE
+  AB_POSITIVE
+  AB_NEGATIVE
+  O_POSITIVE
+  O_NEGATIVE
+}
+
+model User {
+  id          Int        @id @default(autoincrement())
+  name        String
+  dateofBirth String
+  gender      Gender
+  email       String     @unique
+  bloodgroup  BloodGroup
+  phoneNumber String     @unique
+  image       String
+  password    String
+  accessToken String?
+  createdAt   DateTime   @default(now())
+  updatedAt   DateTime   @updatedAt
 }
