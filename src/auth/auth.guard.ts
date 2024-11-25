@@ -26,7 +26,7 @@ export class AuthGuard implements CanActivate {
         secret: process.env.JWT_SECRET,
       });
       await this.databaseService.user.findUnique({
-        where: { id: payload.sub },
+        where: { id: payload.id },
       });
       request['user'] = payload;
     } catch {

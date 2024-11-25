@@ -1,7 +1,7 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { Prisma } from '@prisma/client';
 import { DatabaseService } from 'src/database/database.service';
-
+import * as bcrypt from 'bcrypt';
 @Injectable()
 export class UserService {
   constructor(private readonly databaseService: DatabaseService) {}
@@ -47,6 +47,33 @@ export class UserService {
     return {
       message: 'User deleted successfully',
       data: deletedUser,
+    };
+  }
+
+  async changePassword(
+    id: number,
+    body: { password: string; oldPassword: string },
+  ) {
+    const user = await this.databaseService.user.findUnique({ where: { id } });
+    const isCorrectPassword = await bcrypt.compare(
+      body.oldPassword,
+      user.password,
+    );
+    if (!isCorrectPassword) {
+      throw new Error('Old password is incorrect');
+    }
+    const { password } = body;
+    if (!password || typeof password !== 'string') {
+      throw new Error('Password must be a non-empty string');
+    }
+    const encryptedpassword = await bcrypt.hash(password, 10);
+    const updatedUser = await this.databaseService.user.update({
+      where: { id },
+      data: { password: encryptedpassword },
+    });
+    return {
+      message: 'User password changed successfully',
+      data: updatedUser,
     };
   }
 }
