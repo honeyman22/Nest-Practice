@@ -26,7 +26,7 @@ export class AuthService {
     if (!isCorrectPassword) throw new NotFoundException('Invalid password');
 
     const accessToken = await this.jwtService.signAsync({
-      sub: user.id,
+      id: user.id,
       username: user.name,
     });
     const updatedUser = await this.databaseService.user.update({
@@ -62,7 +62,7 @@ export class AuthService {
     const user = await this.databaseService.user.create({
       data: { ...createUserDto, password: encryptedpassword },
     });
-    const payload = { sub: user.id, username: user.name };
+    const payload = { id: user.id, username: user.name };
     const accessToken = await this.jwtService.signAsync(payload);
 
     const updatedUser = await this.databaseService.user.update({
