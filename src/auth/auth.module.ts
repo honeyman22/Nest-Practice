@@ -10,6 +10,7 @@ import { JwtModule } from '@nestjs/jwt';
   imports: [
     DatabaseModule,
     JwtModule.register({
+      global: true,
       secret: process.env.JWT_SECRET_KEY, // Replace with a secure secret
       signOptions: { expiresIn: '1d' }, // Optional: Token expiration time
     }),
